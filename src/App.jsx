@@ -1,155 +1,107 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Categories from "./assets/Categories";
+import SousCategories from "./assets/SousCategories";
+import Produits from "./assets/Produits";
+import ProduitDetails from "./assets/ProduitDetails";
+import Navbar from "./assets/Navbar";
+import "bootstrap/dist/css/bootstrap.min.css"
+import "./App.css";
 
 function App() {
   const [categories, setCategories] = useState([]);
   const [produits, setProduits] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedSubCategory, setSelectedSubCategory] = useState(null);
+  const [subCategories, setSubCategories] = useState([]);
+  const [showProduits, setShowProduits] = useState(false);
+  const [selectedProduit, setSelectedProduit] = useState(null);
 
+  // Fetch categories and products from Symfony API
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const categoryResponse = await axios.get('https://127.0.0.1:8000/api/categories');
-         const produitResponse = await axios.get('https://127.0.0.1:8000/api/produits');
- 
-        setCategories(categoryResponse.data);
-        setProduits(produitResponse.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    axios
+      .get("https://127.0.0.1:8000/api/categories")
+      .then((response) => setCategories(response.data))
+      .catch((error) => console.error("Error fetching categories:", error));
 
-    fetchData();
+    axios
+      .get("https://127.0.0.1:8000/api/produits")
+      .then((response) => setProduits(response.data ["hydra:member"] || response.data))
+      .catch((error) => console.error("Error fetching products:", error));
   }, []);
 
+  // Show selected category and its subcategories
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+    setShowProduits(false); // Hide product list
+    setSelectedSubCategory(null);
+    setSubCategories(categories.filter(sub => sub.parent && sub.parent.id === category.id));
+  };
+
+  const handleSubCategorySelect = (subCategory) => {
+    setSelectedSubCategory(subCategory);
+    setShowProduits(true);
+  };
+
+  // Show all products when "Produits" is clicked
+  const handleShowProduits = () => {
+    setSelectedCategory(null); // Reset category selection
+    setSelectedSubCategory(null);
+    setShowProduits(true);
+    setSelectedProduit(null);
+  };
+
+  // Show categories when "Catalogue" is clicked
+  const handleShowCategories = () => { 
+  setSelectedCategory(null); 
+  setSelectedSubCategory(null);
+  setShowProduits(true); 
+  setSelectedProduit(null);
+};
+
+  const handleShowSubCategories = () => { 
+    setSelectedCategory(null); 
+    setSelectedSubCategory(null);
+    setShowProduits(true); };
+
+    const handleShowProduitDetails = (produit) => {
+      setSelectedProduit(produit);
+    };
 
   return (
-    <div style={styles.container}>
-      <hr style={styles.horizontalLine} />
-      <h1 style={styles.title}>Les Catégories</h1>
-      <hr style={styles.horizontalLine} />
+    <div>
+      {/* Pass both functions to Navbar */}
+      <Navbar
+        onShowProduits={handleShowProduits}
+        onShowCategories={handleShowCategories}
+        onShowSubCategories={handleShowSubCategories}
 
-      {loading ? <p style={styles.loading}>Chargement...</p> : (
-        <div style={styles.grid}>
-          {categories.map((item, index) => (
-            item.image && (
-              <div key={index} style={{ 
-                ...styles.card, 
-                borderRight: (index + 1) % 3 !== 0 ? '2px solid #ddd' : 'none' // Vertical Line
-              }}>
-                <img src={`/category/${item.image}`} alt={item.nom} style={styles.image} />
-                <p style={styles.categoryName}>{item.nom}</p>
-              </div>
-            )
-          ))}
-        </div>
-      )}
+      />
 
-      <hr style={styles.horizontalLine} />
-      <h1 style={styles.title}>Les Produits</h1>
-      <hr style={styles.horizontalLine} />
+      <div className="container mt-4">
+        <h1 className="text-center text-primary">
+          Bienvenue sur site de village green
+        </h1>
 
-      {loading ? <p style={styles.loading}>Chargement...</p> : (
-        <div style={styles.grid}>
-          {produits.map((item, index) => (
-            item.image && (
-              <div key={index} style={{ 
-                ...styles.card, 
-                borderRight: (index + 1) % 3 !== 0 ? '2px solid #ddd' : 'none' // Vertical Line
-              }}>
-                <img src={`/produits/${item.image}`} alt={item.nom} style={styles.image} />
-                <div style={styles.cardContent}>
-                  <p style={styles.productName}>{item.nom}</p>
-                  <p style={styles.description}>{item.description}</p>
-                  <p style={styles.price}>{(item.prix / 100).toFixed(2)} €</p>
-                </div>
-              </div>
-            )
-          ))}
-        </div>
-      )}
-      <hr style={styles.horizontalLine} />
+        
+        {selectedProduit ? (
+          <ProduitDetails produit={selectedProduit} onBack={handleShowProduits} />
+        ) : showProduits ? (
+          <Produits 
+            produits={selectedSubCategory 
+              ? produits.filter(produit => produit.categories?.id === selectedSubCategory.id) 
+              : produits
+            } 
+            onShowProduitDetails={handleShowProduitDetails}
+          />
+        ) : selectedCategory ? (
+          <SousCategories subCategories={subCategories} onSubCategorySelect={handleSubCategorySelect} />
+        ) : (
+          <Categories categories={categories} onCategorySelect={handleCategorySelect} />
+        )}
+      </div>
     </div>
   );
 }
 
-const styles = {
-  container: {
-    width: '380%',
-    padding: '30px',
-    textAlign: 'center',
-    fontFamily: 'Poppins, Arial, sans-serif',
-    backgroundColor: '#f4f4f9',
-  },
-  title: {
-    fontSize: '28px',
-    fontWeight: '700',
-    color: '#222',
-    marginBottom: '15px',
-  },
-  horizontalLine: {
-    width: '80%',
-    margin: '20px auto',
-    border: '1px solid #ddd',
-  },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-    gap: '20px',
-    justifyContent: 'center',
-    padding: '10px',
-  },
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: '12px',
-    padding: '15px',
-    boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.1)',
-    textAlign: 'center',
-    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-    cursor: 'pointer',
-    overflow: 'hidden',
-  },
-  cardContent: {
-    padding: '10px',
-  },
-  image: {
-    width: '100%',
-    height: '180px',
-    objectFit: 'contain',
-    borderRadius: '8px',
-    display: 'block',
-    transition: 'opacity 0.3s ease',
-  },
-  categoryName: {
-    marginTop: '12px',
-    fontSize: '18px',
-    fontWeight: '600',
-    color: '#007bff',
-  },
-  productName: {
-    fontSize: '18px',
-    fontWeight: '600',
-    color: '#007bff',
-  },
-  description: {
-    fontSize: '14px',
-    color: '#555',
-    marginTop: '5px',
-  },
-  price: {
-    marginTop: '10px',
-    fontSize: '18px',
-    fontWeight: '700',
-    color: '#e63946',
-  },
-  loading: {
-    fontSize: '18px',
-    fontStyle: 'italic',
-    color: '#777',
-  },
-};
-
-
-export default App
+export default App;

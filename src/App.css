@@ -1,42 +1,64 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
 .card {
-  padding: 2em;
+  padding:0em;
+  height: 150px;
+  border-radius: 15px;
+
 }
 
 .read-the-docs {
   color: #888;
+}
+
+/* styles.css */
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.navbar {
+  margin-top: 0;
+  background-color: #c1432e; /* Deep Rusted Red */
+  /*color: #4b6777; /* Silver Head-dress */
+  padding: 15px 30px;
+  display: flex;
+
+  height: 120px;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(44, 44, 44, 0.4); /* Black shadow */
+}
+.nav-link {
+  color: white;
+  font-size: 26px;
+  font-weight: 300;
+  font-weight: bolder;
+  /* Remove width: 100% to avoid stretching */
+  padding: 8px 12px; /* Optional: Add some padding for spacing */
+}
+
+/* .navbar {
+  height: 200px; /* Adjust height */
+/* background-image: url("http://127.0.0.1:8000/uploads/nav1.jpg") !important;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+} */
+
+.card {
+  transition: 0.4s ease;
+}
+
+.card:hover {
+  transform: scale(1.05); /* Slightly increase size on hover */
+  z-index: 1; /* Ensure the hovered card is on top */
+}
+
+.n-hover {
+  transition: none;
+  transform: none;
+}
+
+.n-hover:hover {
+  transform: none;
 }
