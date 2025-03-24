@@ -17,7 +17,7 @@ function Navbar({ onShowProduits, onShowCategories, onShowSubCategory }) {
           <ul className="navbar-nav">
             <li className="nav-item">
               <button className="nav-link btn btn-link text-white" onClick={onShowCategories}>
-                ACCUEIL
+                CATEGORIE
               </button>
             </li>
             <li className="nav-item">
@@ -26,11 +26,7 @@ function Navbar({ onShowProduits, onShowCategories, onShowSubCategory }) {
               </button>
             </li>
 
-            <li className="nav-item">
-              <button className="nav-link btn btn-link text-white" onClick={onShowSubCategory}>
-                Sous category
-              </button>
-            </li>
+           
           </ul>
         </div>
       </div>

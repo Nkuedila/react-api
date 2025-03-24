@@ -10,7 +10,7 @@ function Produits({ produits, onShowProduitDetails }) {
             <div key={produit.id} className="col">
               <div className="card shadow-lg border-0 h-100 d-flex flex-column">
                 <img
-                  src={`http://127.0.0.1:8000/uploads/Produits/${produit.image}`}
+                  src={`http://127.0.0.1:8000/uploads/produits/${produit.image}`}
                   alt={produit.nom}
                   className="card-img-top img-fluid"
                   style={{ maxHeight: "200px", objectFit: "contain" }}

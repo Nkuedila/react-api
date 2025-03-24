@@ -55,7 +55,7 @@ function App() {
   const handleShowCategories = () => { 
   setSelectedCategory(null); 
   setSelectedSubCategory(null);
-  setShowProduits(true); 
+  setShowProduits(false); 
   setSelectedProduit(null);
 };
 
@@ -74,7 +74,7 @@ function App() {
       <Navbar
         onShowProduits={handleShowProduits}
         onShowCategories={handleShowCategories}
-        onShowSubCategories={handleShowSubCategories}
+        onShowSubCategory={handleShowSubCategories}
 
       />
 

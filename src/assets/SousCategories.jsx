@@ -19,7 +19,10 @@ function SousCategories({ subCategories, onSubCategorySelect }) {
                   className="card-img-top img-fluid"
                   style={{ maxHeight: "200px", objectFit: "contain" }}
                 />
+               
+                
                 <h5 className="mt-3">{subCategory.nom}</h5>
+               
               </div>
             </div>
           ))

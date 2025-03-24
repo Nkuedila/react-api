@@ -7,7 +7,7 @@ function ProduitDetails({ produit, onBack }) {
       <div className="row mt-4">
         <div className="col-md-6 text-center">
           <img 
-            src={`http://127.0.0.1:8000/uploads/Produits/${produit.image}`} 
+            src={`http://127.0.0.1:8000/uploads/produits/${produit.image}`} 
             alt={produit.nom} 
             className="img-fluid"
             style={{ maxHeight: "400px", objectFit: "contain" }}
